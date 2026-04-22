@@ -1,0 +1,111 @@
+name: 🚀 Deploy Tech Share to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Force Node.js 24 to avoid deprecation warning
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+
+  # ─────────────────────────────────────────────
+  # JOB 1: Validate & Prepare
+  # ─────────────────────────────────────────────
+  build:
+    name: 🔍 Validate & Prepare
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: ✅ Check Required Files
+        run: |
+          echo "======================================="
+          echo "   Tech Share — Pre-Deploy Checklist"
+          echo "======================================="
+          FAILED=0
+          files=("index.html" "style.css" "script.js" "brochure.html" "sitemap.xml" "robots.txt")
+          for f in "${files[@]}"; do
+            if [ -f "$f" ]; then
+              SIZE=$(wc -c < "$f")
+              echo "  ✅ $f (${SIZE} bytes)"
+            else
+              echo "  ❌ MISSING: $f"
+              FAILED=1
+            fi
+          done
+          if [ "$FAILED" -eq 1 ]; then
+            echo ""
+            echo "❌ Required files missing. Fix before deploying."
+            exit 1
+          fi
+          echo ""
+          echo "✅ All required files present!"
+
+      - name: 📅 Update Sitemap Date
+        run: |
+          TODAY=$(date +%Y-%m-%d)
+          sed -i "s|<lastmod>.*</lastmod>|<lastmod>${TODAY}</lastmod>|g" sitemap.xml
+          echo "✅ Sitemap updated: $TODAY"
+
+      - name: 🏷️ Inject Build Metadata
+        run: |
+          SHORT_SHA="${GITHUB_SHA:0:7}"
+          BUILD_TIME=$(date -u "+%Y-%m-%d %H:%M UTC")
+          echo "Build: $SHORT_SHA at $BUILD_TIME"
+          # Safe injection — no special chars in separator
+          python3 -c "
+          content = open('index.html').read()
+          tag = '<!-- Build: ${SHORT_SHA} | ${BUILD_TIME} -->'
+          content = content.replace('</head>', tag + '\n</head>', 1)
+          open('index.html', 'w').write(content)
+          print('Build metadata injected into index.html')
+          "
+
+      - name: ⚙️ Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: 📦 Upload Site Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+  # ─────────────────────────────────────────────
+  # JOB 2: Deploy
+  # ─────────────────────────────────────────────
+  deploy:
+    name: 🌐 Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: 🚀 Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: 🎉 Print Live URL
+        run: |
+          echo "==========================================="
+          echo "  ✅ Tech Share Website is LIVE!"
+          echo "  🌐 ${{ steps.deployment.outputs.page_url }}"
+          echo "  🔖 Commit: ${GITHUB_SHA:0:7}"
+          echo "  📅 $(date)"
+          echo "==========================================="

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sagargoswami2001.github.io/tech-share/sitemap.xml

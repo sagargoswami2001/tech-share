@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tech Share Course Brochure 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Outfit',sans-serif;background:#f0f4ff;color:#1e293b;min-height:100vh}
+    .print-btn{position:fixed;top:20px;right:20px;background:linear-gradient(135deg,#4f8ef7,#a855f7);color:#fff;border:none;padding:12px 24px;border-radius:10px;font-size:.9rem;font-weight:700;cursor:pointer;z-index:100;font-family:'Outfit',sans-serif}
+    .print-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(79,142,247,.4)}
+    @media print{.print-btn{display:none}}
+
+    .brochure{max-width:900px;margin:0 auto;padding:24px}
+
+    /* COVER */
+    .cover{background:linear-gradient(135deg,#0b1120,#0e1a2e,#1a1040);color:#fff;border-radius:20px;padding:56px 48px;margin-bottom:24px;position:relative;overflow:hidden}
+    .cover::before{content:'';position:absolute;top:-80px;right:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(79,142,247,.2),transparent 70%);pointer-events:none}
+    .cover::after{content:'';position:absolute;bottom:-60px;left:-60px;width:250px;height:250px;background:radial-gradient(circle,rgba(168,85,247,.15),transparent 70%);pointer-events:none}
+    .cover-logo{display:flex;align-items:center;gap:12px;margin-bottom:40px}
+    .cover-logo-icon{width:44px;height:44px;background:linear-gradient(135deg,#4f8ef7,#a855f7);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem}
+    .cover-logo-text{font-size:1.3rem;font-weight:800}
+    .cover-logo-sub{font-size:.7rem;color:rgba(255,255,255,.5);font-weight:400;display:block}
+    .cover-title{font-size:clamp(2rem,5vw,3rem);font-weight:900;line-height:1.1;margin-bottom:16px}
+    .cover-grad{background:linear-gradient(135deg,#4f8ef7,#a855f7,#22d3a2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .cover-sub{color:rgba(255,255,255,.65);font-size:1rem;margin-bottom:32px;line-height:1.6;max-width:500px}
+    .cover-tags{display:flex;flex-wrap:wrap;gap:10px}
+    .ctag{padding:6px 16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:999px;font-size:.78rem;font-weight:600;color:rgba(255,255,255,.8)}
+    .cover-contact{margin-top:36px;padding-top:24px;border-top:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+    .cover-contact span{font-size:.88rem;color:rgba(255,255,255,.7)}
+    .cover-contact strong{color:#fff}
+
+    /* SECTION LABEL */
+    .sec-label{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#4f8ef7;margin-bottom:12px}
+    .sec-title{font-size:1.6rem;font-weight:800;margin-bottom:8px;color:#0f172a}
+    .sec-sub{color:#64748b;font-size:.9rem;margin-bottom:32px}
+    .white-card{background:#fff;border-radius:16px;padding:32px;margin-bottom:24px;box-shadow:0 2px 20px rgba(0,0,0,.06)}
+
+    /* WHY US */
+    .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:0}
+    .why-item{background:#f8faff;border:1px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center}
+    .why-icon{font-size:1.8rem;margin-bottom:8px}
+    .why-item h4{font-size:.9rem;font-weight:700;margin-bottom:4px;color:#0f172a}
+    .why-item p{font-size:.78rem;color:#64748b;line-height:1.5}
+
+    /* COURSES */
+    .course-block{border-radius:16px;overflow:hidden;margin-bottom:20px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+    .course-head{padding:18px 24px;display:flex;align-items:center;gap:14px}
+    .course-emoji{font-size:1.6rem}
+    .course-head h3{font-size:1.05rem;font-weight:800;color:#fff}
+    .course-head .c-dur{font-size:.75rem;color:rgba(255,255,255,.7);margin-top:2px}
+    .course-content{background:#fff;padding:20px 24px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .c-col h5{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;margin-bottom:10px}
+    .c-col ul{display:flex;flex-direction:column;gap:7px}
+    .c-col li{font-size:.82rem;color:#334155;padding-left:14px;position:relative}
+    .c-col li::before{content:'▸';position:absolute;left:0;color:#4f8ef7}
+    .c-career{background:#f0f9ff;border-top:1px solid #e0f0ff;padding:12px 24px;font-size:.8rem;color:#0369a1}
+    .c-career strong{color:#0284c7}
+
+    /* WHAT YOU'LL GET */
+    .get-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .get-item{display:flex;align-items:flex-start;gap:12px;padding:16px;background:#f8faff;border-radius:12px;border:1px solid #e2e8f0}
+    .get-icon{font-size:1.3rem;flex-shrink:0;margin-top:2px}
+    .get-item h4{font-size:.9rem;font-weight:700;margin-bottom:3px;color:#0f172a}
+    .get-item p{font-size:.78rem;color:#64748b}
+
+    /* FOOTER */
+    .bro-footer{background:linear-gradient(135deg,#0b1120,#1a1040);color:#fff;border-radius:16px;padding:32px 36px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
+    .bro-footer h3{font-size:1.1rem;font-weight:800;margin-bottom:6px}
+    .bro-footer p{color:rgba(255,255,255,.6);font-size:.85rem}
+    .bro-footer-cta{background:linear-gradient(135deg,#4f8ef7,#a855f7);color:#fff;padding:12px 28px;border-radius:10px;font-weight:700;font-size:.9rem;text-decoration:none;white-space:nowrap}
+
+    @media print{
+      body{background:#fff}
+      .brochure{padding:0}
+      .cover{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+      .course-head{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    }
+    @media(max-width:640px){
+      .why-grid{grid-template-columns:1fr 1fr}
+      .course-content{grid-template-columns:1fr}
+      .get-grid{grid-template-columns:1fr}
+      .cover{padding:36px 28px}
+      .bro-footer{flex-direction:column;text-align:center}
+    }
+  </style>
+</head>
+<body>
+  <button class="print-btn" onclick="window.print()">🖨️ Save as PDF</button>
+
+  <div class="brochure">
+
+    <!-- COVER -->
+    <div class="cover">
+      <div class="cover-logo">
+        <div class="cover-logo-icon">⚙️</div>
+        <div>
+          <span style="font-size:1.2rem;font-weight:800">Tech Share</span>
+          <span class="cover-logo-sub">Computer Science Training Center · Hapur</span>
+        </div>
+      </div>
+      <h1 class="cover-title">
+        Course Brochure<br>
+        <span class="cover-grad">2026 Edition</span>
+      </h1>
+      <p class="cover-sub">Everything you need to know about our 6 courses — syllabus, career paths, batch schedules, and how we actually teach. No marketing fluff.</p>
+      <div class="cover-tags">
+        <span class="ctag">⚙️ DevOps Engineering</span>
+        <span class="ctag">☁️ Cloud Computing</span>
+        <span class="ctag">🐧 Linux Sysadmin</span>
+        <span class="ctag">🌐 Network Engineer</span>
+        <span class="ctag">🐍 Python & Java</span>
+        <span class="ctag">🖥️ System Admin</span>
+      </div>
+      <div class="cover-contact">
+        <span>📞 <strong>+91-9837876110</strong></span>
+        <span>📧 <strong>sagargoswami7417@gmail.com</strong></span>
+        <span>👤 Instructor: <strong>Sagar Goswami</strong></span>
+        <span>📍 <strong>Hapur, UP</strong> | Online + Offline</span>
+      </div>
+    </div>
+
+    <!-- WHY TECH SHARE -->
+    <div class="white-card">
+      <div class="sec-label">Why Tech Share</div>
+      <h2 class="sec-title">What's Different Here</h2>
+      <p class="sec-sub">Before you look at the courses, understand the environment you'll be learning in.</p>
+      <div class="why-grid">
+        <div class="why-item"><div class="why-icon">🔬</div><h4>Real Labs, Not Slides</h4><p>Every topic is practiced on actual servers, real cloud environments, and production-like setups.</p></div>
+        <div class="why-item"><div class="why-icon">📹</div><h4>Lifetime Recordings</h4><p>Every live class is recorded. You can rewatch any session from any batch, forever.</p></div>
+        <div class="why-item"><div class="why-icon">🤏</div><h4>Small Batches</h4><p>Max 20 students per batch. You get attention, not just a seat in a lecture hall.</p></div>
+        <div class="why-item"><div class="why-icon">💼</div><h4>Placement Active</h4><p>Resume reviews, mock interviews, and job referrals — I stay involved until you're placed.</p></div>
+        <div class="why-item"><div class="why-icon">📅</div><h4>Flexible Timing</h4><p>Weekday mornings, evenings, and weekend batches. Pick what fits your schedule.</p></div>
+        <div class="why-item"><div class="why-icon">🎓</div><h4>Completion Certificate</h4><p>Issued after course + project submission. Backed by your GitHub portfolio.</p></div>
+      </div>
+    </div>
+
+    <!-- COURSES -->
+    <div class="white-card">
+      <div class="sec-label">All Courses</div>
+      <h2 class="sec-title">The Full Syllabus</h2>
+      <p class="sec-sub">What's actually taught — no padding, no topics we skip in class but list in brochures.</p>
+
+      <div class="course-block">
+        <div class="course-head" style="background:linear-gradient(135deg,#2563eb,#4f8ef7)">
+          <span class="course-emoji">⚙️</span>
+          <div><h3>DevOps Engineering</h3><div class="c-dur">Duration: 3 Months | Mode: Online + Offline | Level: Beginner to Advanced</div></div>
+        </div>
+        <div class="course-content">
+          <div class="c-col">
+            <h5>Core Modules</h5>
+            <ul>
+              <li>Git, GitHub, GitLab — version control</li>
+              <li>Jenkins + GitHub Actions for CI/CD</li>
+              <li>Docker — containerization from scratch</li>
+              <li>Kubernetes — orchestration & deployments</li>
+              <li>Terraform — infrastructure as code</li>
+              <li>Ansible — configuration management</li>
+              <li>Prometheus + Grafana — monitoring</li>
+              <li>AWS/Azure DevOps pipelines</li>
+            </ul>
+          </div>
+          <div class="c-col">
+            <h5>What You'll Build</h5>
+            <ul>
+              <li>Full CI/CD pipeline for a real app</li>
+              <li>Dockerized multi-service application</li>
+              <li>Kubernetes cluster on cloud</li>
+              <li>Infrastructure on AWS via Terraform</li>
+              <li>Monitoring dashboard for production</li>
+            </ul>
+          </div>
+        </div>
+        <div class="c-career">🎯 Career Paths: <strong>DevOps Engineer, Site Reliability Engineer, Platform Engineer, Cloud Engineer</strong> — avg starting ₹5–10 LPA</div>
+      </div>
+
+      <div class="course-block">
+        <div class="course-head" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">
+          <span class="course-emoji">☁️</span>
+          <div><h3>Cloud Computing</h3><div class="c-dur">Duration: 3 Months | Mode: Online + Offline | Level: Beginner to Advanced</div></div>
+        </div>
+        <div class="course-content">
+          <div class="c-col">
+            <h5>Core Modules</h5>
+            <ul>
+              <li>AWS: EC2, S3, RDS, Lambda, VPC</li>
+              <li>Microsoft Azure fundamentals</li>
+              <li>Cloud networking & security groups</li>
+              <li>IAM, roles, policies, MFA</li>
+              <li>Serverless computing & functions</li>
+              <li>Cloud storage & database services</li>
+              <li>Cost optimization strategies</li>
+            </ul>
+          </div>
+          <div class="c-col">
+            <h5>What You'll Build</h5>
+            <ul>
+              <li>3-tier app deployed on AWS</li>
+              <li>Serverless API with Lambda + API GW</li>
+              <li>Auto-scaling web application</li>
+              <li>Secure multi-account cloud setup</li>
+            </ul>
+          </div>
+        </div>
+        <div class="c-career">🎯 Career Paths: <strong>Cloud Engineer, AWS Solutions Architect, Azure Admin, Cloud Security Engineer</strong> — avg starting ₹6–12 LPA</div>
+      </div>
+
+      <div class="course-block">
+        <div class="course-head" style="background:linear-gradient(135deg,#059669,#22d3a2)">
+          <span class="course-emoji">🐧</span>
+          <div><h3>Linux Sysadmin</h3><div class="c-dur">Duration: 2 Months | Mode: Online + Offline | Level: Beginner to Intermediate</div></div>
+        </div>
+        <div class="course-content">
+          <div class="c-col">
+            <h5>Core Modules</h5>
+            <ul>
+              <li>Linux file system & directory structure</li>
+              <li>Essential commands & navigation</li>
+              <li>User, group & permission management</li>
+              <li>Package management (apt, yum, dnf)</li>
+              <li>Shell scripting & Bash automation</li>
+              <li>Process & service management</li>
+              <li>Firewall (iptables/ufw), networking</li>
+              <li>SSH, cron jobs, log management</li>
+            </ul>
+          </div>
+          <div class="c-col">
+            <h5>What You'll Build</h5>
+            <ul>
+              <li>Bash scripts for server automation</li>
+              <li>Multi-user Linux environment setup</li>
+              <li>Web server on Ubuntu from scratch</li>
+              <li>Automated backup system via cron</li>
+            </ul>
+          </div>
+        </div>
+        <div class="c-career">🎯 Career Paths: <strong>Linux Admin, Server Engineer, DevOps (pre-req), Sysadmin</strong> — avg starting ₹3.5–7 LPA</div>
+      </div>
+
+      <div class="course-block">
+        <div class="course-head" style="background:linear-gradient(135deg,#ea580c,#f97316)">
+          <span class="course-emoji">🌐</span>
+          <div><h3>Network Engineer</h3><div class="c-dur">Duration: 2 Months | Mode: Online + Offline | Level: Beginner to Intermediate</div></div>
+        </div>
+        <div class="course-content">
+          <div class="c-col">
+            <h5>Core Modules</h5>
+            <ul>
+              <li>OSI model & TCP/IP stack deep-dive</li>
+              <li>IP addressing, subnetting, CIDR</li>
+              <li>Routing protocols (OSPF, EIGRP, BGP)</li>
+              <li>Switching — VLANs, STP, trunking</li>
+              <li>Firewall rules & ACLs</li>
+              <li>VPN types: IPSec, SSL, site-to-site</li>
+              <li>DNS, DHCP, NAT configuration</li>
+            </ul>
+          </div>
+          <div class="c-col">
+            <h5>What You'll Build</h5>
+            <ul>
+              <li>Enterprise network topology in Packet Tracer</li>
+              <li>Configured router + switch lab</li>
+              <li>Site-to-site VPN setup</li>
+              <li>VLAN segmented office network</li>
+            </ul>
+          </div>
+        </div>
+        <div class="c-career">🎯 Career Paths: <strong>Network Engineer, NOC Engineer, Network Admin, Cloud Networking</strong> — avg starting ₹3.5–8 LPA</div>
+      </div>
+
+      <div class="course-block">
+        <div class="course-head" style="background:linear-gradient(135deg,#ca8a04,#eab308)">
+          <span class="course-emoji">🐍</span>
+          <div><h3>Python & Java</h3><div class="c-dur">Duration: 2 Months | Mode: Online + Offline | Level: Beginner to Intermediate</div></div>
+        </div>
+        <div class="course-content">
+          <div class="c-col">
+            <h5>Python Modules</h5>
+            <ul>
+              <li>Variables, data types, control flow</li>
+              <li>Functions, modules, file handling</li>
+              <li>OOP — classes, inheritance, polymorphism</li>
+              <li>Libraries: os, sys, subprocess, requests</li>
+              <li>Automation & scripting projects</li>
+            </ul>
+          </div>
+          <div class="c-col">
+            <h5>Java Modules</h5>
+            <ul>
+              <li>Java syntax, data types, operators</li>
+              <li>OOP concepts in Java</li>
+              <li>Collections, generics, exceptions</li>
+              <li>File I/O, multithreading basics</li>
+              <li>Mini project: console-based application</li>
+            </ul>
+          </div>
+        </div>
+        <div class="c-career">🎯 Career Paths: <strong>Python Developer, Automation Engineer, Backend Developer, DevOps (scripting)</strong> — avg starting ₹4–8 LPA</div>
+      </div>
+
+      <div class="course-block">
+        <div class="course-head" style="background:linear-gradient(135deg,#be185d,#ec4899)">
+          <span class="course-emoji">🖥️</span>
+          <div><h3>System Administration</h3><div class="c-dur">Duration: 2 Months | Mode: Online + Offline | Level: Beginner to Intermediate</div></div>
+        </div>
+        <div class="course-content">
+          <div class="c-col">
+            <h5>Core Modules</h5>
+            <ul>
+              <li>Windows Server setup & configuration</li>
+              <li>Active Directory, users & GPOs</li>
+              <li>DNS, DHCP on Windows Server</li>
+              <li>Backup strategies & disaster recovery</li>
+              <li>Virtualization: VMware, VirtualBox, KVM</li>
+              <li>Monitoring & alerting tools</li>
+            </ul>
+          </div>
+          <div class="c-col">
+            <h5>What You'll Build</h5>
+            <ul>
+              <li>Active Directory lab with 10 users</li>
+              <li>VMware virtual lab environment</li>
+              <li>Automated backup + alert system</li>
+              <li>Web server + FTP server setup</li>
+            </ul>
+          </div>
+        </div>
+        <div class="c-career">🎯 Career Paths: <strong>System Admin, IT Admin, Infrastructure Engineer, IT Support Lead</strong> — avg starting ₹3–7 LPA</div>
+      </div>
+    </div>
+
+    <!-- WHAT YOU GET -->
+    <div class="white-card">
+      <div class="sec-label">Included in Every Course</div>
+      <h2 class="sec-title">What You Actually Get</h2>
+      <p class="sec-sub">Not marketing promises — these are things every enrolled student receives.</p>
+      <div class="get-grid">
+        <div class="get-item"><div class="get-icon">🎥</div><div><h4>Lifetime Recorded Access</h4><p>All sessions recorded and uploaded. Watch at your pace, rewatch anytime.</p></div></div>
+        <div class="get-item"><div class="get-icon">📋</div><div><h4>Structured Notes & Assignments</h4><p>Written notes per module + hands-on assignments to practice on your own.</p></div></div>
+        <div class="get-item"><div class="get-icon">🔬</div><div><h4>Real Lab Environment</h4><p>Access to cloud lab setups for practice outside of class hours.</p></div></div>
+        <div class="get-item"><div class="get-icon">🎓</div><div><h4>Completion Certificate</h4><p>Issued after final project submission. Add it to your LinkedIn and resume.</p></div></div>
+        <div class="get-item"><div class="get-icon">💼</div><div><h4>Resume & Portfolio Review</h4><p>Personal review of your resume and GitHub portfolio before job applications.</p></div></div>
+        <div class="get-item"><div class="get-icon">🧪</div><div><h4>Mock Interview Session</h4><p>One full mock interview (HR + Technical) before you start applying.</p></div></div>
+        <div class="get-item"><div class="get-icon">📱</div><div><h4>Student WhatsApp Group</h4><p>Batch group for doubt clearing, resource sharing, and peer learning.</p></div></div>
+        <div class="get-item"><div class="get-icon">🔄</div><div><h4>Post-Course Support</h4><p>I stay reachable after course ends. Students WhatsApp me before interviews months later.</p></div></div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="bro-footer">
+      <div>
+        <h3>Ready to Enroll?</h3>
+        <p>Call or WhatsApp Sagar Goswami directly — +91-9837876110<br>
+        Email: sagargoswami7417@gmail.com | Location: Hapur, UP</p>
+      </div>
+      <a href="https://sagargoswami2001.github.io/tech-share/#contact" class="bro-footer-cta">Enroll Now →</a>
+    </div>
+
+  </div>
+
+  <script>
+    // Auto-trigger print dialog if opened from download button
+    if (document.referrer.includes('github.io') || document.referrer.includes('localhost')) {
+      setTimeout(() => {
+        document.querySelector('.print-btn').textContent = '🖨️ Save / Print Brochure';
+      }, 500);
+    }
+  </script>
+</body>
+</html>

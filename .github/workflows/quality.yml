@@ -1,0 +1,221 @@
+name: 🔬 Website Quality Check
+
+# TRIGGER: Run on every Pull Request and push to main
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+# Force Node.js 24 to avoid deprecation warning
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+
+  # ─────────────────────────────────────────────
+  # JOB 1: HTML Structure Check
+  # ─────────────────────────────────────────────
+  html-check:
+    name: 🧪 HTML & Structure Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 🔍 Check HTML Basics
+        run: |
+          echo "========================================="
+          echo "  HTML Quality Report — Tech Share"
+          echo "========================================="
+
+          # Check all HTML files
+          for file in *.html; do
+            echo ""
+            echo "📄 Checking: $file"
+            echo "-----------------------------------------"
+
+            # Check for required meta tags
+            if grep -q 'meta name="description"' "$file"; then
+              echo "  ✅ Meta description found"
+            else
+              echo "  ⚠️  Missing meta description"
+            fi
+
+            if grep -q '<title>' "$file"; then
+              TITLE=$(grep -o '<title>.*</title>' "$file" | sed 's/<[^>]*>//g')
+              echo "  ✅ Title: $TITLE"
+            else
+              echo "  ❌ Missing <title> tag"
+            fi
+
+            if grep -q 'og:title' "$file"; then
+              echo "  ✅ Open Graph tags found"
+            else
+              echo "  ⚠️  Missing Open Graph tags"
+            fi
+
+            if grep -q 'application/ld+json' "$file"; then
+              echo "  ✅ Schema.org structured data found"
+            else
+              echo "  ⚠️  Missing Schema.org data"
+            fi
+
+            # Count headings
+            H1=$(grep -c '<h1' "$file" 2>/dev/null || echo 0)
+            echo "  ℹ️  H1 tags found: $H1"
+            if [ "$H1" -gt 1 ]; then
+              echo "  ⚠️  Multiple H1 tags — SEO best practice is 1 per page"
+            fi
+
+            # Check canonical URL
+            if grep -q 'rel="canonical"' "$file"; then
+              echo "  ✅ Canonical URL present"
+            fi
+
+            # File size
+            SIZE=$(wc -c < "$file")
+            echo "  ℹ️  File size: ${SIZE} bytes"
+
+            echo ""
+          done
+
+      - name: 🔗 Check Internal Links
+        run: |
+          echo "========================================="
+          echo "  Link Check Report"
+          echo "========================================="
+          # Check that linked files exist
+          for href in style.css script.js brochure.html hero.png sitemap.xml robots.txt; do
+            if [ -f "$href" ]; then
+              echo "  ✅ Linked file exists: $href"
+            else
+              echo "  ❌ Linked file MISSING: $href"
+            fi
+          done
+
+      - name: 📊 File Size Report
+        run: |
+          echo "========================================="
+          echo "  File Size Report (Performance)"
+          echo "========================================="
+          echo ""
+          total=0
+          for f in *.html *.css *.js *.xml *.txt *.png; do
+            if [ -f "$f" ]; then
+              size=$(wc -c < "$f")
+              total=$((total + size))
+              if [ "$size" -gt 100000 ]; then
+                echo "  ⚠️  $f — ${size} bytes (consider optimizing)"
+              else
+                echo "  ✅ $f — ${size} bytes"
+              fi
+            fi
+          done
+          echo ""
+          echo "  📦 Total site size: $total bytes ($(echo "$total / 1024" | bc) KB)"
+
+  # ─────────────────────────────────────────────
+  # JOB 2: SEO & Sitemap Validation
+  # ─────────────────────────────────────────────
+  seo-check:
+    name: 🔍 SEO & Sitemap Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 📍 Validate Sitemap XML
+        run: |
+          echo "========================================="
+          echo "  Sitemap Validation"
+          echo "========================================="
+          if [ -f "sitemap.xml" ]; then
+            echo "  ✅ sitemap.xml exists"
+            # Check it's valid XML
+            python3 -c "
+          import xml.etree.ElementTree as ET
+          try:
+              tree = ET.parse('sitemap.xml')
+              root = tree.getroot()
+              urls = root.findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')
+              print(f'  ✅ Valid XML — {len(urls)} URLs found')
+              for url in urls:
+                  print(f'     → {url.text}')
+          except Exception as e:
+              print(f'  ❌ Invalid XML: {e}')
+              exit(1)
+          "
+          else
+            echo "  ❌ sitemap.xml MISSING!"
+            exit 1
+          fi
+
+      - name: 🤖 Validate robots.txt
+        run: |
+          echo "========================================="
+          echo "  robots.txt Validation"
+          echo "========================================="
+          if [ -f "robots.txt" ]; then
+            echo "  ✅ robots.txt exists"
+            cat robots.txt
+            if grep -q "Sitemap:" robots.txt; then
+              echo "  ✅ Sitemap reference found in robots.txt"
+            else
+              echo "  ⚠️  No Sitemap reference in robots.txt"
+            fi
+          else
+            echo "  ❌ robots.txt MISSING!"
+            exit 1
+          fi
+
+      - name: 🔑 Check SEO Keywords in HTML
+        run: |
+          echo "========================================="
+          echo "  SEO Keyword Check"
+          echo "========================================="
+          keywords=("Hapur" "DevOps" "Cloud" "Linux" "Sagar Goswami" "Tech Share" "9837876110")
+          for kw in "${keywords[@]}"; do
+            count=$(grep -o "$kw" index.html | wc -l)
+            if [ "$count" -gt 0 ]; then
+              echo "  ✅ '$kw' found ($count times)"
+            else
+              echo "  ⚠️  '$kw' not found — important for local SEO"
+            fi
+          done
+
+  # ─────────────────────────────────────────────
+  # JOB 3: Summary Report
+  # ─────────────────────────────────────────────
+  summary:
+    name: 📋 Final Summary
+    needs: [html-check, seo-check]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: 📊 Quality Gate Result
+        run: |
+          echo "==========================================="
+          echo ""
+          echo "  🎓 Tech Share Website — Quality Report"
+          echo ""
+          echo "  HTML Check:   ${{ needs.html-check.result }}"
+          echo "  SEO Check:    ${{ needs.seo-check.result }}"
+          echo ""
+          if [ "${{ needs.html-check.result }}" = "success" ] && \
+             [ "${{ needs.seo-check.result }}" = "success" ]; then
+            echo "  🟢 ALL CHECKS PASSED — Ready to deploy!"
+          else
+            echo "  🔴 SOME CHECKS FAILED — Review before deploying"
+          fi
+          echo ""
+          echo "==========================================="
