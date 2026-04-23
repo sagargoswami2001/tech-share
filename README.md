@@ -64,15 +64,6 @@ Sessions are recorded. If you miss a class or want to rewatch something, it's th
 
 ---
 
-## Results So Far
-
-- 500+ students trained since we started
-- Students placed at Infosys, TCS, Wipro, Accenture, and several product companies
-- 95% of students who completed the course and applied got at least one interview call
-- Multiple students cleared AWS and Azure certifications within a month of completing Cloud course
-
----
-
 ## Contact
 
 **📞 Phone / WhatsApp:** +91-9837876110
