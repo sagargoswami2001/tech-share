@@ -50,7 +50,6 @@ function addOut(lines, cb) {
       const d = document.createElement('div');
       d.className = 'to'; d.textContent = l;
       termBody.appendChild(d);
-      termBody.scrollTop = termBody.scrollHeight;
       if (idx === lines.length - 1) setTimeout(cb, 500);
     }, idx * 100);
   });
@@ -61,7 +60,6 @@ function newPrompt() {
   d.className = 'tl';
   d.innerHTML = '<span class="tp">sagar@techshare:~$</span> <span class="tc"></span><span class="tcur">▌</span>';
   termBody.appendChild(d);
-  termBody.scrollTop = termBody.scrollHeight;
 }
 
 function runCmd() {
