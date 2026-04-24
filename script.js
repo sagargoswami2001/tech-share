@@ -123,6 +123,21 @@ function goSlide(n) {
 
 setInterval(() => goSlide((curSlide + 1) % tCards.length), 4500);
 
+// ===== IST TIMESTAMP HELPER =====
+function getISTTime() {
+  return new Date().toLocaleString('en-IN', {
+    timeZone: 'Asia/Kolkata',
+    weekday: 'short',
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  }) + ' IST';
+}
+
 // ===== CONTACT FORM (Formspree → sagargoswami7417@gmail.com) =====
 const cform = document.getElementById('cform');
 const fsuccess = document.getElementById('fsuccess');
@@ -133,6 +148,9 @@ if (cform) {
     btn.textContent = 'Sending... ⏳'; btn.disabled = true;
 
     const data = new FormData(cform);
+    // Inject IST timestamp so it appears in every Formspree email
+    data.append('enquiry_time_IST', getISTTime());
+
     try {
       const res = await fetch('https://formspree.io/f/xgorndjy', {
         method: 'POST',
@@ -145,21 +163,19 @@ if (cform) {
         cform.reset();
         setTimeout(() => { fsuccess.style.display = 'none'; }, 7000);
       } else {
-        // Fallback: open mailto if Formspree fails
         const name = data.get('name') || '';
         const email = data.get('email') || '';
         const course = data.get('course') || '';
         const msg = data.get('message') || '';
         const subject = encodeURIComponent('New Enquiry from Tech Share Website');
-        const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nCourse: ${course}\nMessage: ${msg}`);
+        const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nCourse: ${course}\nMessage: ${msg}\nTime (IST): ${getISTTime()}`);
         window.location.href = `mailto:sagargoswami7417@gmail.com?subject=${subject}&body=${body}`;
       }
     } catch {
-      // Fallback: open mailto
       const name = data.get('name') || '';
       const course = data.get('course') || '';
       const subject = encodeURIComponent('New Enquiry from Tech Share Website');
-      const body = encodeURIComponent(`Name: ${name}\nCourse: ${course}`);
+      const body = encodeURIComponent(`Name: ${name}\nCourse: ${course}\nTime (IST): ${getISTTime()}`);
       window.location.href = `mailto:sagargoswami7417@gmail.com?subject=${subject}&body=${body}`;
     }
     btn.textContent = 'Send Enquiry 🚀'; btn.disabled = false;
@@ -205,13 +221,14 @@ if (dlForm) {
     const btn = document.getElementById('dl-btn');
     btn.textContent = 'Preparing... ⏳'; btn.disabled = true;
     const data = new FormData(dlForm);
+    // Inject IST timestamp
+    data.append('download_time_IST', getISTTime());
     try {
       await fetch('https://formspree.io/f/xgorndjy', {
         method: 'POST', body: data,
         headers: { 'Accept': 'application/json' }
       });
     } catch(err) { /* still open brochure */ }
-    // Open the brochure regardless
     window.open('brochure.html', '_blank');
     dlSuccess.style.display = 'block';
     dlForm.reset();
